@@ -59,7 +59,7 @@ function getMemberFields() {
 
   fields
     .newDimension()
-    .setId('lastLoginAt')
+    .setId('memberLastLoginAt')
     .setName('Last Login At')
     .setType(types.YEAR_MONTH_DAY)
 
@@ -78,35 +78,35 @@ function formatMemberData(requestedFieldsArray, member) {
     switch (requestedField.getId()) {
       case 'memberId':
         return member.id
-      case 'email':
+      case 'memberEmail':
         return member.email
-      case 'displayName':
+      case 'memberDisplayName':
         return member.displayName
-      case 'firstName':
+      case 'memberFirstName':
         return member.firstName
-      case 'lastName':
+      case 'memberLastName':
         return member.lastName
-      case 'bio':
+      case 'memberBio':
         if (member.customFields.hasOwnProperty('3PublicBio256CharacterMax')) {
           return member.customFields['3PublicBio256CharacterMax'].value
         } else {
           return ""
         }
-      case 'location':
+      case 'memberLocation':
         if (member.customFields.hasOwnProperty('1Location')) {
           return member.customFields['1Location'].value
         } else {
           return ""
         }
-      case 'rolesCount':
+      case 'memberRolesCount':
         return member.rolesCount
-      case 'createdAt':
+      case 'memberCreatedAt':
         if (member.createdAt === null) {
           return null
         }
         return moment(member.createdAt).format("YYYYMMDD") 
-      case 'lastLoginAt':
-      if (member.lastLoginAt === null) {
+      case 'memberLastLoginAt':
+        if (member.lastLoginAt === null) {
           return null
         }
         return moment(member.lastLoginAt).format("YYYYMMDD") 
