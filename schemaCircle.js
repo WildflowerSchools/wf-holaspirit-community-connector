@@ -11,37 +11,37 @@ function getCircleFields() {
 
   fields
     .newDimension()
-    .setId('name')
+    .setId('circleName')
     .setName('Name')
     .setType(types.TEXT)
 
   fields
     .newDimension()
-    .setId('fteFilledMemberCount')
+    .setId('circleFteFilledMemberCount')
     .setName('FTE Filled Member Count')
     .setType(types.NUMBER)
     
   fields
     .newDimension()
-    .setId('fteValue')
+    .setId('circleFteValue')
     .setName('FTE Value')
     .setType(types.NUMBER)
 
   fields
     .newDimension()
-    .setId('rolesCount')
+    .setId('circleRolesCount')
     .setName('Roles Count')
     .setType(types.NUMBER)
 
   fields
     .newDimension()
-    .setId('membersCount')
+    .setId('circleMembersCount')
     .setName('Members Count')
     .setType(types.NUMBER)
 
   fields
     .newDimension()
-    .setId('createdAt')
+    .setId('circleCreatedAt')
     .setName('Created At')
     .setType(types.YEAR_MONTH_DAY)
 
@@ -60,17 +60,17 @@ function formatCircleData(requestedFieldsArray, circle) {
     switch (requestedField.getId()) {
       case 'circleId':
         return circle.id
-      case 'name':
+      case 'circleName':
         return circle.name
-      case 'fteFilledMemberCount':
+      case 'circleFteFilledMemberCount':
         return circle.timeSpent.FTEFilledMemberCount
-      case 'fteValue':
+      case 'circleFteValue':
         return circle.timeSpent.FTEValue
-      case 'rolesCount':
+      case 'circleRolesCount':
         return circle.rolesCount
-      case 'membersCount':
+      case 'circleMembersCount':
         return circle.membersCount
-      case 'createdAt':
+      case 'circleCreatedAt':
         if (circle.createdAt === null) {
           return null
         }

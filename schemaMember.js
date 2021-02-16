@@ -11,49 +11,49 @@ function getMemberFields() {
 
   fields
     .newDimension()
-    .setId('email')
+    .setId('memberEmail')
     .setName('Email')
     .setType(types.TEXT)
 
   fields
     .newDimension()
-    .setId('displayName')
+    .setId('memberDisplayName')
     .setName('Display Name')
     .setType(types.TEXT)
 
   fields
     .newDimension()
-    .setId('firstName')
+    .setId('memberFirstName')
     .setName('First Name')
     .setType(types.TEXT)
 
   fields
     .newDimension()
-    .setId('lastName')
+    .setId('memberLastName')
     .setName('Last Name')
     .setType(types.TEXT)
 
   fields
     .newDimension()
-    .setId('bio')
+    .setId('memberBio')
     .setName('Bio')
     .setType(types.TEXT)
 
   fields
     .newDimension()
-    .setId('location')
+    .setId('memberLocation')
     .setName('Location')
     .setType(types.TEXT)
 
   fields
     .newMetric()
-    .setId('rolesCount')
+    .setId('memberRolesCount')
     .setName('Roles Count')
     .setType(types.NUMBER)
 
   fields
     .newDimension()
-    .setId('createdAt')
+    .setId('memberCreatedAt')
     .setName('Created At')
     .setType(types.YEAR_MONTH_DAY)
 

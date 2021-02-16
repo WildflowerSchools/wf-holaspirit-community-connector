@@ -72,6 +72,6 @@ function getData(request) {
   }
 }
 
-function testGetData() {
+function __testGetData() {
   getData({configParams: {}})
 }

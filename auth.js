@@ -8,20 +8,20 @@ function getAuthType() {
     .build()
 }
 
-function validateUserPassCredentials(username, password) {
-  return fetchToken(username, password)
-}
-
 function validateTokenCredentialsOrAttemptRefresh(token, username, password) {
-  const meResponse = fetchMe(token)
+  let meResponse = fetchMe(token)
 
-  if (meResponse == false) {
-    const token = validateUserPassCredentials(username, password)
-    if (token == false) {
+  if (meResponse === false) {
+    const token = fetchToken(username, password)
+    if (token === false) {
       return false
     } else {
+      meResponse = fetchMe(token)
+      organization_id = meResponse.organizations[0]
+
       const userProperties = PropertiesService.getUserProperties()
       userProperties.setProperty('wfhs.token', token)
+      userProperties.setProperty('wfhs.organization_id', organization_id)
     }
   }
 
@@ -46,7 +46,7 @@ function setCredentials(request) {
   // Optional
   // Check if the provided username and token are valid through a
   // call to your service.
-  const token = validateUserPassCredentials(username, password)
+  const token = fetchToken(username, password)
   if (token == false) {
     return {
       errorCode: 'INVALID_CREDENTIALS'
@@ -82,7 +82,13 @@ function isAuthValid() {
   const userProperties = PropertiesService.getUserProperties()
   const username = userProperties.getProperty('wfhs.username')
   const password = userProperties.getProperty('wfhs.password')
-  const token = userProperties.getProperty('wfhs.token')
+  const organizationId = userProperties.getProperty('wfhs.organization_id')
+
+  let token = userProperties.getProperty('wfhs.token')
+  if (organizationId === null) {
+    token = ""
+  }
+  
   // This assumes you have a validateCredentials function that
   // can validate if the userName and token are correct.
   return validateTokenCredentialsOrAttemptRefresh(token, username, password)
@@ -95,4 +101,8 @@ function isAdminUser() {
   } else {
     return false
   }
+}
+
+function __testValidateTokenCredentialsOrAttemptRefresh() {
+  validateTokenCredentialsOrAttemptRefresh("", "", "")
 }

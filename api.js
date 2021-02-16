@@ -23,7 +23,7 @@ function fetchDataFromApi(path="/", params={}, authToken=null) {
   if (responseCode === 200) {
     return JSON.parse(responseBody)
   } else {
-    Logger.log(Utilities.formatString("Request failed. Expected 200, got %d: %s", responseCode, responseBody))
+    Logger.log(Utilities.formatString("Request failed: %s. Expected 200, got %d: %s", url, responseCode, responseBody))
     return false
   }
 }

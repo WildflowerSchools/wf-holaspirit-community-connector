@@ -23,25 +23,25 @@ function getMemberRoleAssignmentFields() {
 
   fields
     .newDimension()
-    .setId('coreMember')
+    .setId('memberRoleCoreMember')
     .setName('Core Member')
     .setType(types.BOOLEAN)
 
   fields
     .newDimension()
-    .setId('fteOfMember')
+    .setId('memberFte')
     .setName('FTE of Member')
     .setType(types.NUMBER)
     
   fields
     .newDimension()
-    .setId('fteValue')
+    .setId('memberRoleFteValue')
     .setName('FTE Value')
     .setType(types.NUMBER)
 
   fields
     .newDimension()
-    .setId('assignedUntil')
+    .setId('memberRoleAssignedUntil')
     .setName('Assigned Until')
     .setType(types.YEAR_MONTH_DAY)
 
@@ -64,13 +64,13 @@ function formatMemberRoleAssignmentData(requestedFieldsArray, memberRoleAssignme
         return memberRoleAssignment.member
       case 'roleId':
         return memberRoleAssignment.role
-      case 'coreMember':
+      case 'memberRoleCoreMember':
         return memberRoleAssignment.coreMember
-      case 'fteOfMember':
+      case 'memberFte':
         return memberRoleAssignment.timeSpent.FTEOfMember
-      case 'fteValue':
+      case 'memberRoleFteValue':
         return memberRoleAssignment.timeSpent.FTEValue
-      case 'assignedUntil':
+      case 'memberRoleAssignedUntil':
         if (memberRoleAssignment.assignedUntil === null) {
           return null
         }

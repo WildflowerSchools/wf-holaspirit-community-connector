@@ -11,43 +11,43 @@ function getRoleFields() {
 
   fields
     .newDimension()
-    .setId('name')
+    .setId('roleName')
     .setName('Name')
     .setType(types.TEXT)
 
   fields
     .newDimension()
-    .setId('purpose')
+    .setId('rolePurpose')
     .setName('Purpose')
     .setType(types.TEXT)
 
   fields
     .newDimension()
-    .setId('fteFilledMemberCount')
+    .setId('roleFteFilledMemberCount')
     .setName('FTE Filled Member Count')
     .setType(types.NUMBER)
     
   fields
     .newDimension()
-    .setId('fteValue')
+    .setId('roleFteValue')
     .setName('FTE Value')
     .setType(types.NUMBER)
 
   fields
     .newDimension()
-    .setId('membersCount')
+    .setId('roleMembersCount')
     .setName('Members Count')
     .setType(types.NUMBER)
 
   fields
     .newDimension()
-    .setId('parentCircleId')
+    .setId('roleParentCircleId')
     .setName('Parent Circle ID')
     .setType(types.TEXT)
 
   fields
     .newDimension()
-    .setId('createdAt')
+    .setId('roleCreatedAt')
     .setName('Created At')
     .setType(types.YEAR_MONTH_DAY)
 
@@ -66,19 +66,19 @@ function formatRoleData(requestedFieldsArray, role) {
     switch (requestedField.getId()) {
       case 'roleId':
         return role.id
-      case 'parentCircleId':
+      case 'roleParentCircleId':
         return role.parentCircle
-      case 'name':
+      case 'roleName':
         return role.name
-      case 'purpose':
+      case 'rolePurpose':
         return role.purpose
-      case 'fteFilledMemberCount':
+      case 'roleFteFilledMemberCount':
         return role.timeSpent.FTEFilledMemberCount
-      case 'fteValue':
+      case 'roleFteValue':
         return role.timeSpent.FTEValue
-      case 'membersCount':
+      case 'roleMembersCount':
         return role.timeSpent.totalMemberCount
-      case 'createdAt':
+      case 'roleCreatedAt':
         if (role.createdAt === null) {
           return null
         }
