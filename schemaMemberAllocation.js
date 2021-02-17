@@ -11,6 +11,12 @@ function getMemberAllocationFields() {
 
   fields
     .newDimension()
+    .setId('organizationDaysPerMonth')
+    .setName('Organization Days Per Month')
+    .setType(types.NUMBER)
+
+  fields
+    .newDimension()
     .setId('memberId')
     .setName('Member ID')
     .setType(types.TEXT)
@@ -150,6 +156,8 @@ function formatMemberAllocationData(requestedFieldsArray, memberAllocation) {
     switch (requestedField.getId()) {
       case 'memberRoleAssignmentId':
         return memberAllocation.id
+      case 'organizationDaysPerMonth':
+        return memberAllocation.organization.effortConfiguration.daysPerMonth
       case 'memberId':
         return memberAllocation.member.id
       case 'memberDisplayName':

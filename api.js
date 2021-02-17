@@ -44,11 +44,31 @@ function fetchToken(username, password) {
 }
 
 function fetchMe(token) {
-  response = fetchDataFromApi("/api/me", {}, token)
+  const response = fetchDataFromApi("/api/me", {}, token)
   if (response == false) {
     return response
   } else {
     return response.data
+  }
+}
+
+function fetchOrganization(token, ignoreCache=false) {
+  const chunky = new ChunkyCache(CacheService.getScriptCache())
+
+  const fx = () => {
+    const organization_id = getOrganizationId()
+    const response = fetchDataFromApi(`/api/organizations/${organization_id}`, {}, token)
+    if (response == false) {
+      return response
+    } else {
+      return response.data
+    }
+  }
+
+  if (ignoreCache) {
+    return fx()
+  } else {
+    return chunky.getOrExecute("api__fetch_organization", fx)
   }
 }
 
@@ -183,6 +203,8 @@ function fetchMemberRoleAssignments(token, ignoreCache=false) {
 function fetchMemberAllocations(token) {
   const memberRoleAssignations = fetchMemberRoleAssignments(token)
   
+  const organization = fetchOrganization(token)
+
   const members = fetchMembers(token)
   let membersById = {}
   members.forEach(function(data){
@@ -202,6 +224,7 @@ function fetchMemberAllocations(token) {
   })
 
   const final = memberRoleAssignations.map(mra => {
+    mra.organization = organization
     mra.role = rolesById[mra.role]
     mra.circle = circlesById[mra.role.parentCircle]
     mra.member = membersById[mra.member]
