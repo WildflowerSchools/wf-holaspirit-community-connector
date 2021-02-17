@@ -11,6 +11,12 @@ function getMemberFields() {
 
   fields
     .newDimension()
+    .setId('organizationDaysPerMonth')
+    .setName('Organization Days Per Month')
+    .setType(types.NUMBER)
+    
+  fields
+    .newDimension()
     .setId('memberEmail')
     .setName('Email')
     .setType(types.TEXT)
@@ -53,6 +59,12 @@ function getMemberFields() {
 
   fields
     .newDimension()
+    .setId('memberFte')
+    .setName('Member FTE')
+    .setType(types.NUMBER)
+
+  fields
+    .newDimension()
     .setId('memberCreatedAt')
     .setName('Created At')
     .setType(types.YEAR_MONTH_DAY)
@@ -78,6 +90,8 @@ function formatMemberData(requestedFieldsArray, member) {
     switch (requestedField.getId()) {
       case 'memberId':
         return member.id
+      case 'organizationDaysPerMonth':
+        return member.organization.effortConfiguration.daysPerMonth
       case 'memberEmail':
         return member.email
       case 'memberDisplayName':
@@ -100,6 +114,8 @@ function formatMemberData(requestedFieldsArray, member) {
         }
       case 'memberRolesCount':
         return member.rolesCount
+      case 'memberFte':
+        return member.fullTimeEquivalent
       case 'memberCreatedAt':
         if (member.createdAt === null) {
           return null

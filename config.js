@@ -5,7 +5,7 @@ function getConfig() {
     .newInfo()
     .setId('version')
     .setText(
-      "Version - 1.0.33"
+      "Version - 1.0.37"
     );
 
   config

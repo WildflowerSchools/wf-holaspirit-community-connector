@@ -72,6 +72,26 @@ function fetchOrganization(token, ignoreCache=false) {
   }
 }
 
+function fetchMemberTimespent(token, member_id, ignoreCache=false) {
+  const chunky = new ChunkyCache(CacheService.getScriptCache())
+
+  const fx = () => {
+    const organization_id = getOrganizationId()
+    const response = fetchDataFromApi(`/api/organizations/${organization_id}/members/${member_id}/timespent`, {}, token)
+    if (response == false) {
+      return response
+    } else {
+      return response.data
+    }
+  }
+
+  if (ignoreCache) {
+    return fx()
+  } else {
+    return chunky.getOrExecute(`api__fetch_member_timespent__${member_id}`, fx)
+  }
+}
+
 function paginate(url, token, dataKeyPath="data", pageCount=100) {
   let nextPage = 1
   let paginatedData = []
@@ -95,16 +115,41 @@ function paginate(url, token, dataKeyPath="data", pageCount=100) {
 function fetchMembers(token, ignoreCache=false) {
   const chunky = new ChunkyCache(CacheService.getScriptCache())
 
+  const formattedMembers = chunky.get("api__fetch_members__formatted")
+  if (formattedMembers !== null && formattedMembers !== undefined) {
+    return formattedMembers
+  }
+
   const fx = () => {
     const organization_id = getOrganizationId()
     return paginate(`/api/organizations/${organization_id}/members`, token)
   }
 
+  let members = []
   if (ignoreCache) {
-    return fx()
+    members = fx()
   } else {
-    return chunky.getOrExecute("api__fetch_members", fx)
+    members = chunky.getOrExecute("api__fetch_members", fx)
   }
+
+  /** /////////////////////////////////////////
+   * Custom formatting (start)
+   *    - Add the members fullTimeEquivalent (adds an additional fetch request)
+   *    - Add the organization data
+   */ /////////////////////////////////////////
+  const organization = fetchOrganization(token)
+  members = members.map((m) => {
+    const timespentData = fetchMemberTimespent(getToken(), m.id)
+    m.fullTimeEquivalent = timespentData.fullTimeEquivalent
+
+    m.organization = organization
+
+    return m
+  })
+
+  chunky.put('api__fetch_members__formatted', members)
+
+  return members
 }
 
 function fetchCircles(token, ignoreCache=false) {
@@ -237,6 +282,15 @@ function fetchMemberAllocations(token) {
 function __testFetchMembers() {
   const token = ''
   console.log(fetchMembers(token))
+
+  let members = fetchMembers(getToken())
+
+  members = members.map((m) => {
+    const timespentData = fetchMemberTimespent(getToken(), m.id)
+    m.fullTimeEquivalent = timespentData.fullTimeEquivalent
+    return m
+  })
+  console.log(members)
 }
 
 function __testFetchCircles() {
