@@ -47,6 +47,18 @@ function getMemberAllocationFields() {
 
   fields
     .newDimension()
+    .setId('memberCreatedAt')
+    .setName('Member Created At')
+    .setType(types.YEAR_MONTH_DAY)
+
+  fields
+    .newDimension()
+    .setId('memberLastLoginAt')
+    .setName('Member Last Login At')
+    .setType(types.YEAR_MONTH_DAY)
+
+  fields
+    .newDimension()
     .setId('circleId')
     .setName('Circle ID')
     .setType(types.TEXT)
@@ -154,6 +166,16 @@ function formatMemberAllocationData(requestedFieldsArray, memberAllocation) {
         } else {
           return ""
         }
+      case 'memberCreatedAt':
+        if (memberAllocation.member.createdAt === null) {
+          return null
+        }
+        return moment(memberAllocation.member.createdAt).format("YYYYMMDD") 
+      case 'memberLastLoginAt':
+        if (memberAllocation.member.lastLoginAt === null) {
+          return null
+        }
+        return moment(memberAllocation.member.lastLoginAt).format("YYYYMMDD") 
       case 'circleId':
         if (memberAllocation.circle) {
           return memberAllocation.circle.id

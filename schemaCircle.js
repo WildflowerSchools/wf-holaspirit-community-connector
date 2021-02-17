@@ -11,6 +11,12 @@ function getCircleFields() {
 
   fields
     .newDimension()
+    .setId('circleParentId')
+    .setName('Parent ID')
+    .setType(types.TEXT)
+
+  fields
+    .newDimension()
     .setId('circleName')
     .setName('Name')
     .setType(types.TEXT)
@@ -25,8 +31,22 @@ function getCircleFields() {
     .newDimension()
     .setId('circleFteValue')
     .setName('FTE Value')
+    .setDescription('FTE Value for this circle only')
     .setType(types.NUMBER)
 
+  fields
+    .newDimension()
+    .setId('circleFteTotal')
+    .setName('FTE Total')
+    .setDescription('FTE Value including all sub-circle values')
+    .setType(types.NUMBER)
+
+  fields
+    .newDimension()
+    .setId('circleSubCirclesCount')
+    .setName('Sub-Circles Count')
+    .setType(types.NUMBER)
+  
   fields
     .newDimension()
     .setId('circleRolesCount')
@@ -60,12 +80,18 @@ function formatCircleData(requestedFieldsArray, circle) {
     switch (requestedField.getId()) {
       case 'circleId':
         return circle.id
+      case 'circleParentId':
+        return circe.parentCircle
       case 'circleName':
         return circle.name
       case 'circleFteFilledMemberCount':
         return circle.timeSpent.FTEFilledMemberCount
       case 'circleFteValue':
         return circle.timeSpent.FTEValue
+      case 'circleFteTotal':
+        return circle.fteTotal
+      case 'circleSubCirclesCount':
+        return circle.children.length
       case 'circleRolesCount':
         return circle.rolesCount
       case 'circleMembersCount':

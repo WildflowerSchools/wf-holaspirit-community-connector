@@ -90,16 +90,57 @@ function fetchMembers(token, ignoreCache=false) {
 function fetchCircles(token, ignoreCache=false) {
   const chunky = new ChunkyCache(CacheService.getScriptCache())
 
+  const formattedCircles = chunky.get("api__fetch_circles__formatted")
+  if (formattedCircles !== null && formattedCircles !== undefined) {
+    return formattedCircles
+  }
+
   const fx = () => {
     const organization_id = getOrganizationId()
     return paginate(`/api/organizations/${organization_id}/circles`, token)
   }
 
+  let circles = []
   if (ignoreCache) {
-    return fx()
+    circles = fx()
   } else {
-    return chunky.getOrExecute("api__fetch_circles", fx)
+    circles = chunky.getOrExecute("api__fetch_circles", fx)
   }
+
+  /** /////////////////////////////////////////
+   * Custom formatting (start)
+   *    - Add a cumulative total FTE that includes sub-circle FTEs
+   */ /////////////////////////////////////////
+  let circlesById = {}
+  circles.forEach((circle) => {
+    circle['children'] = []
+    circlesById[circle.id] = circle
+  })
+
+  circles.forEach((circle) => {
+    if (circle.parentCircle !== null) {
+      circlesById[circle.parentCircle].children.push(circle)
+    }
+  })
+
+  const computeCircleTotalFTE = (circle, _circlesById) => {
+    fteTotal = circle.timeSpent.FTEValue
+    circle.children.forEach((_, idx, _childCircles) => {
+      fteTotal += computeCircleTotalFTE(_childCircles[idx], _circlesById)
+    })
+    circle.fteTotal = fteTotal
+    return fteTotal
+  }
+  circles.forEach((circle) => {
+    computeCircleTotalFTE(circle, circlesById)
+  })
+  /** /////////////////////////////////////////
+   * Custom formatting (end)
+   */ /////////////////////////////////////////
+
+  chunky.put('api__fetch_circles__formatted', circles)
+
+  return circles
 }
 
 function fetchRoles(token, ignoreCache=false) {
@@ -173,6 +214,14 @@ function fetchMemberAllocations(token) {
 function __testFetchMembers() {
   const token = ''
   console.log(fetchMembers(token))
+}
+
+function __testFetchCircles() {
+  const token = ''
+  const circles = fetchCircles(token)
+  circles.forEach(function(circle){
+    console.log(`Circle: ${circle.name} - ${circle.fteTotal}`)
+  })
 }
 
 function __testFetchMemberAllocations() {
