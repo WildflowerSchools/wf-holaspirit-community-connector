@@ -179,6 +179,7 @@ function fetchCircles(token, ignoreCache=false) {
   let circlesById = {}
   circles.forEach((circle) => {
     circle['children'] = []
+    circle['parentCircleName'] = null
     circlesById[circle.id] = circle
   })
 
@@ -198,6 +199,9 @@ function fetchCircles(token, ignoreCache=false) {
   }
   circles.forEach((circle) => {
     computeCircleTotalFTE(circle, circlesById)
+    if (circle['parentCircle'] !== null) {
+      circle['parentCircleName'] = circlesById[circle['parentCircle']].name
+    }
   })
   /** /////////////////////////////////////////
    * Custom formatting (end)
@@ -297,7 +301,7 @@ function __testFetchCircles() {
   const token = ''
   const circles = fetchCircles(token)
   circles.forEach(function(circle){
-    console.log(`Circle: ${circle.name} - ${circle.fteTotal}`)
+    console.log(`Circle: ${circle.name} - ${circle.fteTotal}. Parent: ${circle.parentCircleName}`)
   })
 }
 

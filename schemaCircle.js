@@ -17,6 +17,12 @@ function getCircleFields() {
 
   fields
     .newDimension()
+    .setId('circleParentName')
+    .setName('Parent Name')
+    .setType(types.TEXT)
+
+  fields
+    .newDimension()
     .setId('circleName')
     .setName('Name')
     .setType(types.TEXT)
@@ -81,7 +87,9 @@ function formatCircleData(requestedFieldsArray, circle) {
       case 'circleId':
         return circle.id
       case 'circleParentId':
-        return circe.parentCircle
+        return circle.parentCircle
+      case 'circleParentName':
+        return circle.parentCircleName
       case 'circleName':
         return circle.name
       case 'circleFteFilledMemberCount':

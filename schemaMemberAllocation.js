@@ -77,6 +77,18 @@ function getMemberAllocationFields() {
 
   fields
     .newDimension()
+    .setId('circleParentId')
+    .setName('Parent Circle ID')
+    .setType(types.TEXT)
+
+  fields
+    .newDimension()
+    .setId('circleParentName')
+    .setName('Parent Circle Name')
+    .setType(types.TEXT)
+
+  fields
+    .newDimension()
     .setId('circleFteFilledMemberCount')
     .setName('Circle FTE Filled Member Count')
     .setType(types.NUMBER)
@@ -193,6 +205,19 @@ function formatMemberAllocationData(requestedFieldsArray, memberAllocation) {
       case 'circleName':
         if (memberAllocation.circle) {
           return memberAllocation.circle.name
+        } else {
+          return ""
+        }
+      
+      case 'circleParentId':
+        if (memberAllocation.circle) {
+          return memberAllocation.circle.parentCircle
+        } else {
+          return ""
+        }
+      case 'circleParentName':
+        if (memberAllocation.circle) {
+          return memberAllocation.circle.parentCircleName
         } else {
           return ""
         }

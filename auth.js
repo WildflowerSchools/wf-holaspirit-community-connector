@@ -68,14 +68,10 @@ function setCredentials(request) {
 
 function resetAuth() {
   const user_tokenProperties = PropertiesService.getUserProperties()
-  user_tokenProperties.deleteProperty('wfhs.username')
-  user_tokenProperties.deleteProperty('wfhs.password')
+  // user_tokenProperties.deleteProperty('wfhs.username')
+  // user_tokenProperties.deleteProperty('wfhs.password')
   user_tokenProperties.deleteProperty('wfhs.token')
   user_tokenProperties.deleteProperty('wfhs.organization_id')
-}
-
-function testResetAuth() {
-  resetAuth()
 }
 
 function isAuthValid() {
@@ -83,6 +79,10 @@ function isAuthValid() {
   const username = userProperties.getProperty('wfhs.username')
   const password = userProperties.getProperty('wfhs.password')
   const organizationId = userProperties.getProperty('wfhs.organization_id')
+
+  if (username === null || password === null) {
+    return false
+  }
 
   let token = userProperties.getProperty('wfhs.token')
   if (organizationId === null) {
@@ -105,4 +105,23 @@ function isAdminUser() {
 
 function __testValidateTokenCredentialsOrAttemptRefresh() {
   validateTokenCredentialsOrAttemptRefresh("", "", "")
+}
+
+function __testResetAuth() {
+  resetAuth()
+}
+
+function __testGetUserProperties() {
+  const userProperties = PropertiesService.getUserProperties()
+  console.log(userProperties.getProperty('wfhs.username') )
+  console.log(userProperties.getProperty('wfhs.token') )
+  console.log(userProperties.getProperty('wfhs.password') )
+  console.log(userProperties.getProperty('wfhs.organization_id') )
+}
+
+function __setAuth() {
+  console.log(setCredentials({userPass: {
+    username: "",
+    password: ""
+  }}))
 }
