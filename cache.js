@@ -48,7 +48,7 @@ class ChunkyCache {
 
   getOrExecute(key, fx) {
     const check = this.get(key)
-    if (check !== null && check !== undefined) {
+    if (check !== null && check !== undefined && check !== false) {
       return check
     }
 

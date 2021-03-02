@@ -22,6 +22,8 @@ function validateTokenCredentialsOrAttemptRefresh(token, username, password) {
       const userProperties = PropertiesService.getUserProperties()
       userProperties.setProperty('wfhs.token', token)
       userProperties.setProperty('wfhs.organization_id', organization_id)
+
+      Logger.log("Token and Organization ID reset")
     }
   }
 
@@ -63,7 +65,7 @@ function setCredentials(request) {
   userProperties.setProperty('wfhs.organization_id', organization_id)
   return {
     errorCode: 'NONE'
-  };
+  }
 }
 
 function resetAuth() {
@@ -124,4 +126,8 @@ function __setAuth() {
     username: "",
     password: ""
   }}))
+}
+
+function __testIsAuthValid() {
+  console.log(isAuthValid())
 }

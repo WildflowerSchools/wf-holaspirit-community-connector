@@ -45,7 +45,7 @@ function fetchToken(username, password) {
 
 function fetchMe(token) {
   const response = fetchDataFromApi("/api/me", {}, token)
-  if (response == false) {
+  if (response === false) {
     return response
   } else {
     return response.data
