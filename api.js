@@ -142,6 +142,12 @@ function fetchMembers(token, ignoreCache=false) {
     const timespentData = fetchMemberTimespent(getToken(), m.id)
     m.fullTimeEquivalent = timespentData.fullTimeEquivalent
 
+    m.allocatedTimeAsPercent = timespentData.times.reduce((accumulator=0, time) => {
+      return accumulator + time.timeSpent
+    }, 0) / 100
+
+    m.remainingTimeAsPercent = 1 - m.allocatedTimeAsPercent
+
     m.organization = organization
 
     return m

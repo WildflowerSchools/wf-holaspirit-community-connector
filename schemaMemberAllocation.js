@@ -140,6 +140,21 @@ function getMemberAllocationFields() {
     .setId('memberFte')
     .setName('Member FTE')
     .setType(types.NUMBER)
+    .setDescription("If Full-Time this value equals 1, otherwise reflects users Part-Time %")
+
+  fields
+    .newDimension()
+    .setId('memberFteRemainingAsPercent')
+    .setName('Member FTE Remaining As Percentage')
+    .setType(types.NUMBER)
+    .setDescription("Number of FTEs not allocated")
+
+  fields
+    .newDimension()
+    .setId('memberFteAllocatedAsPercent')
+    .setName('Member FTE Allocated As Percentage')
+    .setType(types.NUMBER)
+    .setDescription("Number of FTEs allocated")
     
   fields
     .newDimension()
@@ -266,7 +281,11 @@ function formatMemberAllocationData(requestedFieldsArray, memberAllocation) {
       case 'memberRoleCoreMember':
         return memberAllocation.coreMember
       case 'memberFte':
-        return memberAllocation.timeSpent.FTEOfMember
+        return memberAllocation.member.fullTimeEquivalent
+      case 'memberFteRemainingAsPercent':
+        return memberAllocation.member.remainingTimeAsPercent
+      case 'memberFteAllocatedAsPercent':
+        return memberAllocation.member.allocatedTimeAsPercent
       case 'memberRoleFteValue':
         return memberAllocation.timeSpent.FTEValue
       case 'memberRoleAssignedUntil':
