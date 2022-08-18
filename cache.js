@@ -6,7 +6,7 @@ class ChunkyCache {
     this.chunkSize = chunkSize
   }
 
-  put(key, value, timeout=15*60) {
+  put(key, value, timeout=60*60*24) {
     const json = JSON.stringify(value)
     if (json === undefined) {
       return

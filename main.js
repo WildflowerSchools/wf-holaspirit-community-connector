@@ -73,5 +73,5 @@ function getData(request) {
 }
 
 function __testGetData() {
-  getData({configParams: {}})
+  getData({configParams: {record_type: 'members'}, fields: [{name: 'memberFirstName'}]})
 }

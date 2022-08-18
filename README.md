@@ -16,9 +16,9 @@ Originally inspired by need to on-demand break down FTE allocation by circle and
 
 ### Screenshots
 
-![Data Studio Dashboard](/docs/DataStudio_Dashboard.png)
+![Data Studio Dashboard](./docs/DataStudio_Dashboard.png)
 
-![Data Studio Report](/docs/HolaSpirit_Allocation_Breakdown.png)
+![Data Studio Report](./docs/HolaSpirit_Allocation_Breakdown.png)
 
 ### Code
 

@@ -1,5 +1,5 @@
 {
-  "timeZone": "America/New_York",
+  "timeZone": "America/Chicago",
   "exceptionLogging": "STACKDRIVER",
   "runtimeVersion": "V8",
   "dependencies": {
@@ -15,12 +15,19 @@
     "name": "HolaSpirit",
     "logoUrl": "https://uploads-ssl.webflow.com/5f2028f7568ba0d0fe5270e0/5f43911e37dae2b74dd17c40_favicon.png",
     "company": "Wildflower Schools",
-    "companyUrl": "http://wildflowerschools.org/",
-    "addonUrl": "http://wildflowerschools.org/",
-    "supportUrl": "http://wildflowerschools.org/",
+    "companyUrl": "https://wildflowerschools.org/",
+    "addonUrl": "https://wildflowerschools.org/",
+    "supportUrl": "https://wildflowerschools.org/",
     "description": "HolaSpirit Data Studio Connector written by Wildflower Schools",
     "sources": [
       "holaspirit"
     ]
+  },
+  "oauthScopes": [
+    "https://www.googleapis.com/auth/userinfo.email",
+    "https://www.googleapis.com/auth/script.external_request"
+  ],
+  "executionApi": {
+    "access": "ANYONE"
   }
 }

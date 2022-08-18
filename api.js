@@ -11,7 +11,7 @@ function fetchDataFromApi(path="/", params={}, authToken=null) {
   const queryString = Object.keys(params).map(key => key + '=' + params[key]).join('&')
   const url = `${BASE_URL}${path}?${queryString}`
 
-  options = {headers: {}, muteHttpExceptions: true}
+  let options = {headers: {}, muteHttpExceptions: true}
   if (authToken !== null) {
     options.headers["Authorization"] = `Bearer ${authToken}`
   }
@@ -92,7 +92,7 @@ function fetchMemberTimespent(token, member_id, ignoreCache=false) {
   }
 }
 
-function paginate(url, token, dataKeyPath="data", pageCount=100) {
+function paginate(url, token, dataKeyPath="data", pageCount=500) {
   let nextPage = 1
   let paginatedData = []
   while (nextPage !== null) {
@@ -115,11 +115,6 @@ function paginate(url, token, dataKeyPath="data", pageCount=100) {
 function fetchMembers(token, ignoreCache=false) {
   const chunky = new ChunkyCache(CacheService.getScriptCache())
 
-  const formattedMembers = chunky.get("api__fetch_members__formatted")
-  if (formattedMembers !== null && formattedMembers !== undefined) {
-    return formattedMembers
-  }
-
   const fx = () => {
     const organization_id = getOrganizationId()
     return paginate(`/api/organizations/${organization_id}/members`, token)
@@ -129,6 +124,11 @@ function fetchMembers(token, ignoreCache=false) {
   if (ignoreCache) {
     members = fx()
   } else {
+    const formattedMembers = chunky.get("api__fetch_members__formatted")
+    if (formattedMembers !== null && formattedMembers !== undefined) {
+      return formattedMembers
+    }
+
     members = chunky.getOrExecute("api__fetch_members", fx)
   }
 
@@ -139,7 +139,7 @@ function fetchMembers(token, ignoreCache=false) {
    */ /////////////////////////////////////////
   const organization = fetchOrganization(token)
   members = members.map((m) => {
-    const timespentData = fetchMemberTimespent(getToken(), m.id)
+    const timespentData = fetchMemberTimespent(token, m.id)
     m.fullTimeEquivalent = timespentData.fullTimeEquivalent
 
     m.allocatedTimeAsPercent = timespentData.times.reduce((accumulator=0, time) => {
@@ -289,22 +289,21 @@ function fetchMemberAllocations(token) {
   return final
 }
 
+function __getTokenProperty() {
+  const userProperties = PropertiesService.getScriptProperties()
+  return userProperties.getProperty('HOLASPIRIT_TOKEN')
+}
+
 function __testFetchMembers() {
-  const token = ''
-  console.log(fetchMembers(token))
-
-  let members = fetchMembers(getToken())
-
-  members = members.map((m) => {
-    const timespentData = fetchMemberTimespent(getToken(), m.id)
-    m.fullTimeEquivalent = timespentData.fullTimeEquivalent
-    return m
+  const token = __getTokenProperty()
+  let members = fetchMembers(token)
+  members.forEach(function(member){
+    console.log(member)
   })
-  console.log(members)
 }
 
 function __testFetchCircles() {
-  const token = ''
+  const token = __getTokenProperty()
   const circles = fetchCircles(token)
   circles.forEach(function(circle){
     console.log(`Circle: ${circle.name} - ${circle.fteTotal}. Parent: ${circle.parentCircleName}`)
@@ -312,6 +311,6 @@ function __testFetchCircles() {
 }
 
 function __testFetchMemberAllocations() {
-  const token = ''
+  const token = __getTokenProperty()
   return fetchMemberAllocations(token)
 }
