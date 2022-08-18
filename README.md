@@ -12,7 +12,7 @@ Originally inspired by need to on-demand break down FTE allocation by circle and
     * Circles
     * Roles
     * Member Allocations (de-normalized combination of members/circles/roles)
-* Simple 15 Minute Caching
+* Simple [CacheService based Caching](https://developers.google.com/apps-script/reference/cache/cache-service#getScriptCache())
 
 ### Screenshots
 
