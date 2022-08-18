@@ -9,6 +9,7 @@ class ChunkyCache {
   put(key, value, timeout=60*60*24) {
     const json = JSON.stringify(value)
     if (json === undefined) {
+      Logger.log(`Failed writing to key+value to cache, key: ${key}`)
       return
     }
     

@@ -82,7 +82,7 @@ function fetchMemberTimespent(token, member_id, ignoreCache=false) {
     if (response == false) {
       return response
     } else {
-      Logger.log("Reloaded MemberTimespent data")
+      Logger.log(`Reloaded MemberTimespent data for memberId: ${member_id}`)
       return response.data
     }
   }
@@ -141,7 +141,7 @@ function fetchMembers(token, ignoreCache=false) {
    */ /////////////////////////////////////////
   const organization = fetchOrganization(token, ignoreCache)
   members = members.map((m) => {
-    const timespentData = fetchMemberTimespent(token, m.id)
+    const timespentData = fetchMemberTimespent(token, m.id, ignoreCache)
     m.fullTimeEquivalent = timespentData.fullTimeEquivalent
 
     m.allocatedTimeAsPercent = timespentData.times.reduce((accumulator=0, time) => {
