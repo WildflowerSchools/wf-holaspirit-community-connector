@@ -1,5 +1,5 @@
 function triggerRefreshData() {
   const token = getToken()
   
-  fetchMemberAllocations(token, ignoreCache=true)
+  fetchMemberAllocations(token, true)
 }
