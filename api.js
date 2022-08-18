@@ -61,6 +61,7 @@ function fetchOrganization(token, ignoreCache=false) {
     if (response == false) {
       return response
     } else {
+      Logger.log("Reloaded Organization data")
       return response.data
     }
   }
@@ -81,6 +82,7 @@ function fetchMemberTimespent(token, member_id, ignoreCache=false) {
     if (response == false) {
       return response
     } else {
+      Logger.log("Reloaded MemberTimespent data")
       return response.data
     }
   }
@@ -137,7 +139,7 @@ function fetchMembers(token, ignoreCache=false) {
    *    - Add the members fullTimeEquivalent (adds an additional fetch request)
    *    - Add the organization data
    */ /////////////////////////////////////////
-  const organization = fetchOrganization(token)
+  const organization = fetchOrganization(token, ignoreCache)
   members = members.map((m) => {
     const timespentData = fetchMemberTimespent(token, m.id)
     m.fullTimeEquivalent = timespentData.fullTimeEquivalent
@@ -155,15 +157,18 @@ function fetchMembers(token, ignoreCache=false) {
 
   chunky.put('api__fetch_members__formatted', members)
 
+  Logger.log("Reloaded Members data")
   return members
 }
 
 function fetchCircles(token, ignoreCache=false) {
   const chunky = new ChunkyCache(CacheService.getScriptCache())
 
-  const formattedCircles = chunky.get("api__fetch_circles__formatted")
-  if (formattedCircles !== null && formattedCircles !== undefined) {
-    return formattedCircles
+  if (!ignoreCache) {
+    const formattedCircles = chunky.get("api__fetch_circles__formatted")
+    if (formattedCircles !== null && formattedCircles !== undefined) {
+      return formattedCircles
+    }
   }
 
   const fx = () => {
@@ -215,6 +220,7 @@ function fetchCircles(token, ignoreCache=false) {
 
   chunky.put('api__fetch_circles__formatted', circles)
 
+  Logger.log("Reloaded Circles data")
   return circles
 }
 
@@ -223,7 +229,9 @@ function fetchRoles(token, ignoreCache=false) {
   
   const fx = () => {
     const organization_id = getOrganizationId()
-    return paginate(`/api/organizations/${organization_id}/roles`, token)
+    const roles = paginate(`/api/organizations/${organization_id}/roles`, token)
+    Logger.log("Reloaded Roles data")
+    return roles
   }
 
   if (ignoreCache) {
@@ -245,6 +253,7 @@ function fetchMemberRoleAssignments(token, ignoreCache=false) {
       ...new Set(records.map((r) => JSON.stringify(r)))
     ].map((stringified) => JSON.parse(stringified))
 
+    Logger.log("Reloaded Member Role Assignments data")
     return uniqueRecords
   }
 
@@ -255,24 +264,24 @@ function fetchMemberRoleAssignments(token, ignoreCache=false) {
   }
 }
 
-function fetchMemberAllocations(token) {
-  const memberRoleAssignations = fetchMemberRoleAssignments(token)
+function fetchMemberAllocations(token, ignoreCache=false) {
+  const memberRoleAssignations = fetchMemberRoleAssignments(token, ignoreCache)
   
-  const organization = fetchOrganization(token)
+  const organization = fetchOrganization(token, ignoreCache)
 
-  const members = fetchMembers(token)
+  const members = fetchMembers(token, ignoreCache)
   let membersById = {}
   members.forEach(function(data){
       membersById[data['id']] = data
   })
 
-  const circles = fetchCircles(token)
+  const circles = fetchCircles(token, ignoreCache)
   let circlesById = {}
   circles.forEach(function(data){
       circlesById[data['id']] = data
   })
 
-  const roles = fetchRoles(token)
+  const roles = fetchRoles(token, ignoreCache)
   let rolesById = {}
   roles.forEach(function(data){
       rolesById[data['id']] = data
@@ -286,6 +295,7 @@ function fetchMemberAllocations(token) {
     return mra
   })
 
+  Logger.log("Reloaded Member Role Allocations data")
   return final
 }
 
